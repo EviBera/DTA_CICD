@@ -31,3 +31,18 @@ export function add(store, params) {
   store.set(toStore)
   return newTodo;
 }
+
+export function complete(store, params) {
+  const [id] = params;
+  const todos = store.get()
+  const toStore = todos.map(todo => {
+    if (todo.id === parseInt(id)) {
+      return {
+        ...todo,
+        done: true
+      }
+    }
+    return todo;
+  })
+  store.set(toStore)
+}

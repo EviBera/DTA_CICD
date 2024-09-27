@@ -1,5 +1,7 @@
 import { jest } from '@jest/globals';
-import { add, format, formatList, list } from './todo.js';
+import { add, complete, format, formatList, list } from './todo.js';
+import { validateAddParams, validateCompleteParams } from './validate.js';
+import { AppError } from './app-error.js';
 
 function createMockStore(data) {
   return {
@@ -7,6 +9,11 @@ function createMockStore(data) {
     set: jest.fn()
   }
 }
+
+jest.mock('./validate', () => ({
+  validateCompleteParams: jest.fn(), 
+  validateAddParams: jest.fn()
+}));
 
 describe('format', () => {
   it('should format a not done todo', () => {
@@ -99,7 +106,7 @@ describe('add', () => {
 
   it('should append a new todo to the existing items', () => {
     const params = ['New Todo'];
-    const stored = [{id: 1, title: 'Todo 1', done: true}];
+    const stored = [{ id: 1, title: 'Todo 1', done: true }];
     const mockStore = createMockStore(stored);
     const expected = {
       id: 2,
@@ -117,8 +124,8 @@ describe('add', () => {
   it('should calculate the id by max id + 1, missing ids in a sequence', () => {
     const params = ['New Todo'];
     const stored = [
-      {id: 2, title: 'Todo 1', done: true},
-      {id: 4, title: 'Todo 1', done: true},
+      { id: 2, title: 'Todo 1', done: true },
+      { id: 4, title: 'Todo 1', done: true },
     ];
     const mockStore = createMockStore(stored);
     const expected = {
@@ -133,7 +140,13 @@ describe('add', () => {
     expect(mockStore.set.mock.calls[0][0])
       .toStrictEqual([...stored, expected]);
   });
-});
+}
+
+);
+
+  
+
+
 
 
 
