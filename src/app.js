@@ -24,7 +24,6 @@ export function createApp(todoStore, args) {
       const foundByTitle = findByTitle(todoStore, validatedSerchTerm);
 
       if(typeof foundByTitle === "string"){
-        //console.log(foundByTitle);
         display([foundByTitle]);
       } else {
         display([`Todos containing "${params}": `, ...formatList(Object.values(foundByTitle))]);
