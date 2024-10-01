@@ -10,3 +10,17 @@ export function validateAddParams(params) {
   }
   return params;
 }
+
+export function validateSearchParams(params){
+
+  if(params.length < 1) {
+    throw new AppError('Give a title to search for.');
+  }
+
+  const searchPhrase = params.join(' ');
+  if(searchPhrase.length < 3){
+    throw new AppError('Give at least 3 characters to search for.');
+  }
+
+  return searchPhrase;
+}

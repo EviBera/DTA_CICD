@@ -31,3 +31,14 @@ export function add(store, params) {
   store.set(toStore)
   return newTodo;
 }
+
+export function findByTitle(store, searchPhrase){
+  const todos = store.get();
+  const found = todos.filter(todo => todo.title.toLowerCase().includes(searchPhrase.toLowerCase()));
+
+  if(found.length === 0){
+    return `Hurray, there aren't any todos containing "${searchPhrase}"!`;
+  } 
+
+  return found;  
+}
