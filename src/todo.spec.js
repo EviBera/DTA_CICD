@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals';
-import { add, format, formatList, list } from './todo.js';
+import { add, format, formatList, list, findByTitle } from './todo.js';
 
 function createMockStore(data) {
   return {
@@ -133,6 +133,41 @@ describe('add', () => {
     expect(mockStore.set.mock.calls[0][0])
       .toStrictEqual([...stored, expected]);
   });
+});
+
+describe('findByTitle', () => {
+  it('should return todos that contain the search phrase (case insensitive)', () => {
+    const mockStore = createMockStore([
+      { id: 1, title: 'Buy groceries', done: false },
+      { id: 2, title: 'Study for exam', done: false },
+      { id: 3, title: 'Plan vacation', done: true }
+    ]);
+    const searchPhrase = 'buy';
+    const expected = [{
+      id: 1,
+      done: false,
+      title: 'Buy groceries'
+    }];
+
+    const current = findByTitle(mockStore, searchPhrase);
+
+    expect(current).toStrictEqual(expected);
+  });
+
+  it('should return the "Hurray" message when no todos match the search phrase', () => {
+    const mockStore = createMockStore([
+      { id: 1, title: 'Buy groceries', done: false },
+      { id: 2, title: 'Study for exam', done: false },
+      { id: 3, title: 'Plan vacation', done: true }
+    ]);
+    const searchPhrase = 'run';
+    const expected = `Hurray, there aren't any todos containing "run"!`;
+
+    const current = findByTitle(mockStore, searchPhrase);
+
+    expect(current).toStrictEqual(expected);
+  });
+
 });
 
 
