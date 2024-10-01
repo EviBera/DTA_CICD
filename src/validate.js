@@ -10,3 +10,11 @@ export function validateAddParams(params) {
   }
   return params;
 }
+
+export function validateSearchParams(params){
+  const [searchPhrase] = params;
+  if(searchPhrase.length < 3){
+    throw new AppError('Give at least 3 characters to search for.');
+  }
+  return searchPhrase;
+}
