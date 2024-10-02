@@ -1,7 +1,7 @@
-import { list, formatList, format, add } from './todo.js';
+import { list, formatList, format, add, updateTitle } from './todo.js';
 import { display } from './display.js';
 import { AppError } from './app-error.js';
-import { validateAddParams, validateCompleteParams } from './validate.js';
+import { validateAddParams, validateCompleteParams, validateUpdateTitleParams } from './validate.js';
 
 
 export function createApp(todoStore, args) {
@@ -11,11 +11,11 @@ export function createApp(todoStore, args) {
   switch (command) {
     case 'list':
       display([
-        ...formatList(todos), 
+        ...formatList(todos),
         `You have ${todos.length} todos.`
       ]);
       console.log(todos);
-      
+
       break;
     case 'add':
       const validated = validateAddParams(params);
@@ -24,13 +24,19 @@ export function createApp(todoStore, args) {
       break;
 
     case 'complete':
-    
+
       const validate = validateCompleteParams(params, todos.length)
-      const selectedTodo =  todos.filter(todo => todo.id === validate)
+      const selectedTodo = todos.filter(todo => todo.id === validate)
       selectedTodo[0].done = true
       todoStore.set(todos)
       break;
 
+    case 'update-title':
+      const [id, newTitle] = params;
+      const validatedId = validateUpdateTitleParams(id, newTitle, todos);
+      const updatedTodo = updateTitle(todoStore, validatedId, newTitle);
+      display(['Todo updated:', format(updatedTodo)]);
+      break;
 
     default:
       throw new AppError(`Unknown command: ${command}`)
